@@ -1,0 +1,82 @@
+[
+  {
+    "code": "anhui",
+    "name": "安徽"
+  },
+  {
+    "code": "chongqing",
+    "name": "重庆"
+  },
+  {
+    "code": "fujian",
+    "name": "福建"
+  },
+  {
+    "code": "gansu",
+    "name": "甘肃"
+  },
+  {
+    "code": "guangdong",
+    "name": "广东"
+  },
+  {
+    "code": "guangxi",
+    "name": "广西"
+  },
+  {
+    "code": "guizhou",
+    "name": "贵州"
+  },
+  {
+    "code": "hebei",
+    "name": "河北"
+  },
+  {
+    "code": "henan",
+    "name": "河南"
+  },
+  {
+    "code": "hubei",
+    "name": "湖北"
+  },
+  {
+    "code": "hunan",
+    "name": "湖南"
+  },
+  {
+    "code": "jiangsu",
+    "name": "江苏"
+  },
+  {
+    "code": "jiangxi",
+    "name": "江西"
+  },
+  {
+    "code": "liaoning",
+    "name": "辽宁"
+  },
+  {
+    "code": "shaanxi",
+    "name": "陕西"
+  },
+  {
+    "code": "shandong",
+    "name": "山东"
+  },
+  {
+    "code": "shanxi",
+    "name": "山西"
+  },
+  {
+    "code": "sichuan",
+    "name": "四川"
+  },
+  {
+    "code": "yunnan",
+    "name": "云南"
+  },
+  {
+    "code": "zhejiang",
+    "name": "浙江"
+  }
+]

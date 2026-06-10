@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高考志愿填报助手 - 冲稳保查询</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --danger: #e53935;
+            --danger-dark: #b71c1c;
+            --success: #2e7d32;
+            --warning: #f57c00;
+            --bg: #f5f6fa;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --text-secondary: #5f6368;
+            --border: #e0e4e8;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s ease;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== 主页面容器 ========== */
+        .app-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== 头部 ========== */
+        .app-header {
+            text-align: center;
+            padding: 20px 0 12px;
+        }
+        .app-header .logo {
+            font-size: 2rem;
+            margin-bottom: 4px;
+        }
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+        .app-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ========== 卡片 ========== */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+        }
+
+        /* ========== 选项卡 ========== */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #e8eaed;
+            margin-bottom: 18px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #5f6368;
+            transition: var(--transition);
+            position: relative;
+            white-space: nowrap;
+            letter-spacing: -0.3px;
+        }
+        .tab-btn.active {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+        }
+        .tab-btn:hover:not(.active) {
+            color: #3c4043;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ========== 表单 ========== */
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #3c4043;
+            letter-spacing: -0.2px;
+        }
+        .form-group label .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+        .form-group label .optional {
+            color: #9aa0a6;
+            font-weight: 400;
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+        select,
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #fafbfc;
+            color: var(--text);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%235f6368'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+            background: #fff;
+        }
+
+        /* ========== 按钮 ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            letter-spacing: -0.2px;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            width: 100%;
+            font-size: 1rem;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(26, 115, 232, 0.3);
+        }
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+        .btn-outline {
+            background: #fff;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #f8faff;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #f9a825, #f57c00);
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(245, 124, 0, 0.35);
+            animation: pulse-gold 2s infinite;
+        }
+        @keyframes pulse-gold {
+            0%,
+            100% {
+                box-shadow: 0 2px 10px rgba(245, 124, 0, 0.35);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(245, 124, 0, 0.55);
+            }
+        }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #fbc02d, #ef6c00);
+            transform: translateY(-1px);
+        }
+
+        /* ========== 解锁状态栏 ========== */
+        .unlock-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #fffef5;
+            border: 1px solid #ffe082;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+        }
+        .unlock-bar.unlocked {
+            background: #f1f8e9;
+            border-color: #aed581;
+        }
+        .unlock-status {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .unlock-status .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ========== 模态弹窗 ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+        .modal h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        .modal p {
+            color: #5f6368;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .modal .price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f57c00;
+            margin: 8px 0;
+        }
+        .modal input {
+            text-align: center;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            font-family: var(--font-mono);
+            margin-bottom: 12px;
+        }
+        .modal .btn {
+            width: 100%;
+            margin-top: 6px;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #9aa0a6;
+        }
+        .modal {
+            position: relative;
+        }
+        .modal .hint {
+            font-size: 0.75rem;
+            color: #9aa0a6;
+            margin-top: 4px;
+        }
+
+        /* ========== 结果页样式 ========== */
+        .result-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .result-header .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #5f6368;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .result-header .back-btn:hover {
+            background: #f1f3f4;
+        }
+        .result-header .info-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .result-header .info-tag.tag-orange {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .result-header .info-tag.tag-green {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .result-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 16px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.3px;
+        }
+        .section-title .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .badge-chong {
+            background: #e53935;
+        }
+        .badge-wen {
+            background: #f57c00;
+        }
+        .badge-bao {
+            background: #2e7d32;
+        }
+
+        /* ========== 表格 ========== */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: #fff;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 700px;
+        }
+        thead th {
+            background: #fafbfc;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #5f6368;
+            border-bottom: 2px solid #e0e4e8;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            letter-spacing: -0.2px;
+        }
+        tbody td {
+            padding: 9px 8px;
+            text-align: center;
+            border-bottom: 1px solid #f0f2f5;
+            white-space: nowrap;
+        }
+        tbody tr:hover {
+            background: #f8faff;
+        }
+        .locked-cell {
+            color: #b0b5bb;
+            font-size: 1.1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+        .locked-cell:hover {
+            color: #f57c00;
+            transform: scale(1.2);
+        }
+        .school-name-cell {
+            text-align: left;
+            font-weight: 600;
+            color: #1a1a1a;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tag-985 {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 3px;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        .tag-211 {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #e3f2fd;
+            color: #0d47a1;
+            border-radius: 3px;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        .no-result {
+            text-align: center;
+            padding: 30px;
+            color: #9aa0a6;
+            font-size: 0.9rem;
+        }
+
+        /* ========== 折叠面板 ========== */
+        .accordion-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .accordion-toggle .arrow {
+            transition: transform 0.25s ease;
+            font-size: 0.8rem;
+            color: #5f6368;
+        }
+        .accordion-toggle.collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+        .accordion-content {
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+            max-height: 2000px;
+        }
+        .accordion-content.collapsed {
+            max-height: 0;
+        }
+
+        /* ========== 加载动画 ========== */
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            gap: 12px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0e4e8;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #323232;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .toast.success {
+            background: #2e7d32;
+        }
+        .toast.error {
+            background: #c62828;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 8px;
+            }
+            .card {
+                padding: 14px;
+                border-radius: 10px;
+            }
+            .app-header h1 {
+                font-size: 1.25rem;
+            }
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 10px 6px;
+            }
+            select,
+            input {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+            table {
+                font-size: 0.7rem;
+                min-width: 600px;
+            }
+            thead th,
+            tbody td {
+                padding: 6px 5px;
+            }
+            .result-header {
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .result-header .info-tag {
+                font-size: 0.7rem;
+                padding: 3px 7px;
+            }
+            .modal {
+                margin: 10px;
+                padding: 18px;
+            }
+        }
+        @media (max-width: 380px) {
+            .tab-btn {
+                font-size: 0.72rem;
+                padding: 8px 4px;
+                letter-spacing: -0.5px;
+            }
+            .unlock-bar {
+                font-size: 0.75rem;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 主页面（输入页） ==================== -->
+    <div id="input-page" class="app-container">
+        <!-- 头部 -->
+        <div class="app-header">
+            <div class="logo">🎓</div>
+            <h1>高考志愿填报助手</h1>
+            <p class="subtitle">冲稳保智能分档 · 历年数据查询</p>
+        </div>
+
+        <!-- 解锁状态栏 -->
+        <div class="unlock-bar" id="unlockBar">
+            <span class="unlock-status">
+                <span class="icon">🔒</span> 免费版（2024-2025年数据可见）
+            </span>
+            <button class="btn btn-sm btn-gold" onclick="showUnlockModal()">💰 解锁全部数据</button>
+        </div>
+
+        <!-- 选项卡 -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="chongwenbao" onclick="switchTab('chongwenbao')">
+                📊 按位次查冲稳保
+            </button>
+            <button class="tab-btn" data-tab="school" onclick="switchTab('school')">
+                🏫 按学校查历年数据
+            </button>
+        </div>
+
+        <!-- 冲稳保查询表单 -->
+        <div class="card" id="form-chongwenbao">
+            <div class="form-group">
+                <label>省份 <span class="required">*</span></label>
+                <select id="province-select-cwb">
+                    <option value="">-- 请选择省份 --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>科类 <span class="required">*</span></label>
+                <select id="category-select-cwb">
+                    <option value="">-- 请选择科类 --</option>
+                    <option value="物理类">物理类</option>
+                    <option value="历史类">历史类</option>
+                    <option value="综合">综合</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>2026年预估位次 <span class="required">*</span></label>
+                <input type="number" id="rank-input-cwb" placeholder="请输入2026年预估位次，如：5000" min="1">
+            </div>
+            <div class="form-group">
+                <label>2026年预估分数 <span class="optional">(选填，仅供显示)</span></label>
+                <input type="number" id="score-input-cwb" placeholder="如：620（不参与筛选）" min="0">
+            </div>
+            <button class="btn btn-primary" onclick="submitChongWenBao()">
+                🔍 查询冲稳保
+            </button>
+        </div>
+
+        <!-- 学校查询表单 -->
+        <div class="card" id="form-school" style="display:none;">
+            <div class="form-group">
+                <label>省份 <span class="required">*</span></label>
+                <select id="province-select-school">
+                    <option value="">-- 请选择省份 --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>学校名称 <span class="required">*</span></label>
+                <input type="text" id="school-name-input" placeholder="请输入学校名称（支持模糊匹配），如：武汉大学">
+            </div>
+            <button class="btn btn-primary" onclick="submitSchoolQuery()">
+                🔍 查询学校数据
+            </button>
+        </div>
+
+        <!-- 底部提示 -->
+        <p style="text-align:center;color:#9aa0a6;font-size:0.75rem;margin-top:auto;padding:10px;">
+            💡 数据基于2022-2025年各省录取数据 · 结果仅供参考
+        </p>
+    </div>
+
+    <!-- ==================== 解锁弹窗 ==================== -->
+    <div class="modal-overlay" id="unlockModal">
+    <div class="modal">
+        <button class="close-btn" onclick="closeUnlockModal()">✕</button>
+        <h3>🔓 解锁全部年份数据</h3>
+        <p style="font-size:0.9rem;color:#5f6368;margin-bottom:4px;">解锁后即可查看 <strong>2022-2025年</strong> 完整录取数据</p>
+        <p style="font-size:0.8rem;color:#9aa0a6;margin-top:0;">
+            📊 四年分数 · 📈 位次变化 · 📉 趋势分析 · 🏷️ 最新填报指南
+        </p>
+        <div class="price">¥99</div>
+        <p style="font-size:0.85rem;color:#e65100;font-weight:600;margin:4px 0;">
+            ⚡ 一次购买，永久有效，不限查询次数
+        </p>
+        <p style="font-size:0.75rem;color:#9aa0a6;">
+            联系客服领取专属解锁码<br>每个码仅限一台设备使用
+        </p>
+        <input type="text" id="unlockCodeInput" placeholder="请输入8位解锁码" maxlength="20" style="text-align:center;font-size:1.1rem;letter-spacing:2px;">
+        <button class="btn btn-gold" onclick="verifyUnlockCode()" style="margin-top:8px;">
+            ✅ 验证解锁
+        </button>
+        <div style="margin-top:12px; display:flex; align-items:center; justify-content:center; gap:6px;">
+    <svg width="22" height="18" viewBox="0 0 24 20" fill="#07C160" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.5 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-9.05 3.9c-.7 0-1.3.2-1.7.5-1 .6-1.5 1.5-1.5 2.6v.5h8v-.5c0-1.1-.5-2-1.5-2.6-.4-.3-1-.5-1.7-.5h-1.6zm7.1-.1c-.5 0-1 .1-1.4.3-.6.3-1 .7-1.2 1.3h3.2c-.2-.6-.6-1-1.2-1.3-.4-.2-.9-.3-1.4-.3zM12 0C5.4 0 0 4.2 0 9.5 0 12.5 1.6 15 4.1 16.8l-1 3.2 3.5-1.8c1 .3 2.1.5 3.3.5.7 0 1.3-.1 1.9-.2-1.4-1.1-2.3-2.7-2.3-4.5 0-3.3 2.9-6 6.5-6 .4 0 .8 0 1.2.1C16.2 2.7 14.3 0 12 0z"/>
+        <circle cx="15" cy="14" r="2" fill="#07C160"/>
+        <circle cx="19" cy="12" r="2" fill="#07C160"/>
+        <circle cx="15" cy="10" r="1.5" fill="#07C160"/>
+        <circle cx="19" cy="8" r="1.5" fill="#07C160"/>
+        <circle cx="17" cy="6" r="1.5" fill="#07C160"/>
+        <circle cx="21" cy="6" r="1.5" fill="#07C160"/>
+        <circle cx="23" cy="8" r="1.5" fill="#07C160"/>
+    </svg>
+    <span style="font-size:0.82rem; color:#07C160; font-weight:600;">加客服领取资料</span>
+</div>
+<p class="hint" style="margin:4px 0 0 0; font-size:0.75rem;">微信号：<strong style="color:#07C160;">hbw9109</strong></p>
+</p>
+    </div>
+</div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==================== 全局状态 ====================
+        const DATA_BASE_PATH = './data/';
+        const STORAGE_KEY_UNLOCK = 'gk_assistant_unlocked';
+        const STORAGE_KEY_UNLOCK_TIME = 'gk_assistant_unlock_time';
+
+        let provincesData = []; // provinces.json 数据
+        let currentTab = 'chongwenbao';
+
+        // ==================== 初始化 ====================
+        async function init() {
+            // 检查是否为结果页
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'result') {
+                // 结果页模式
+                document.getElementById('input-page').style.display = 'none';
+                await renderResultPage(params);
+                return;
+            }
+            if (params.get('mode') === 'school-result') {
+                document.getElementById('input-page').style.display = 'none';
+                await renderSchoolResultPage(params);
+                return;
+            }
+
+            // 输入页模式
+            await loadProvincesList();
+            updateUnlockBar();
+        }
+
+        // ==================== 加载省份列表 ====================
+        async function loadProvincesList() {
+            try {
+                const resp = await fetch(DATA_BASE_PATH + 'provinces.json');
+                if (!resp.ok) throw new Error('无法加载省份列表');
+                provincesData = await resp.json();
+                populateProvinceSelects();
+            } catch (err) {
+                console.error('加载省份列表失败:', err);
+                showToast('❌ 加载省份列表失败，请检查 data/provinces.json 文件', 'error');
+                // 使用默认省份
+                provincesData = [
+                    { code: 'beijing', name: '北京' },
+                    { code: 'shanghai', name: '上海' },
+                    { code: 'guangdong', name: '广东' },
+                    { code: 'jiangsu', name: '江苏' },
+                    { code: 'zhejiang', name: '浙江' },
+                    { code: 'hubei', name: '湖北' },
+                    { code: 'sichuan', name: '四川' },
+                    { code: 'shandong', name: '山东' },
+                    { code: 'henan', name: '河南' },
+                    { code: 'hunan', name: '湖南' },
+                ];
+                populateProvinceSelects();
+            }
+        }
+
+        function populateProvinceSelects() {
+            const selectCwb = document.getElementById('province-select-cwb');
+            const selectSchool = document.getElementById('province-select-school');
+            const optionsHTML = provincesData.map(p =>
+                `<option value="${p.code}">${p.name}</option>`
+            ).join('');
+
+            selectCwb.innerHTML = '<option value="">-- 请选择省份 --</option>' + optionsHTML;
+            selectSchool.innerHTML = '<option value="">-- 请选择省份 --</option>' + optionsHTML;
+        }
+
+        // ==================== 选项卡切换 ====================
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById('form-chongwenbao').style.display = tab === 'chongwenbao' ? '' : 'none';
+            document.getElementById('form-school').style.display = tab === 'school' ? '' : 'none';
+        }
+
+        // ==================== 解锁相关 ====================
+        function isUnlocked() {
+            return localStorage.getItem(STORAGE_KEY_UNLOCK) === 'true';
+        }
+
+        function updateUnlockBar() {
+            const bar = document.getElementById('unlockBar');
+            if (isUnlocked()) {
+                bar.classList.add('unlocked');
+                const time = localStorage.getItem(STORAGE_KEY_UNLOCK_TIME) || '';
+                bar.innerHTML = `
+                    <span class="unlock-status"><span class="icon">✅</span> 已解锁全部数据（2022-2025年）</span>
+                    <button class="btn btn-sm btn-outline" onclick="resetUnlock()">重置</button>
+                `;
+            } else {
+                bar.classList.remove('unlocked');
+                bar.innerHTML = `
+                    <span class="unlock-status"><span class="icon">🔒</span> 免费版（2024-2025年数据可见）</span>
+                    <button class="btn btn-sm btn-gold" onclick="showUnlockModal()">💰 解锁全部数据</button>
+                `;
+            }
+        }
+
+        function showUnlockModal() {
+            document.getElementById('unlockModal').classList.add('show');
+            document.getElementById('unlockCodeInput').value = '';
+            document.getElementById('unlockCodeInput').focus();
+        }
+
+        function closeUnlockModal() {
+            document.getElementById('unlockModal').classList.remove('show');
+        }
+
+        async function verifyUnlockCode() {
+    const code = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
+    if (!code) {
+        showToast('请输入解锁码', 'error');
+        return;
+    }
+
+    // 计算输入码的 SHA-256 哈希
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(code));
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    // 加载哈希列表（首次从文件加载，之后缓存）
+    if (!window._hashedCodes) {
+        try {
+            const resp = await fetch('data/hashed_codes.json');
+            if (!resp.ok) throw new Error('文件加载失败');
+            window._hashedCodes = await resp.json();
+        } catch (e) {
+            console.error(e);
+            showToast('❌ 验证服务暂不可用', 'error');
+            return;
+        }
+    }
+
+    const hashedCodes = window._hashedCodes;
+
+    if (!hashedCodes.includes(hashHex)) {
+        showToast('❌ 解锁码无效', 'error');
+        return;
+    }
+
+    // 检查该码是否已在本机使用过
+    let usedHashes = JSON.parse(localStorage.getItem('usedHashes') || '[]');
+    if (usedHashes.includes(hashHex)) {
+        showToast('❌ 该解锁码已被使用', 'error');
+        return;
+    }
+
+    // 标记解锁
+    localStorage.setItem(STORAGE_KEY_UNLOCK, 'true');
+    localStorage.setItem(STORAGE_KEY_UNLOCK_TIME, new Date().toLocaleString('zh-CN'));
+    usedHashes.push(hashHex);
+    localStorage.setItem('usedHashes', JSON.stringify(usedHashes));
+
+    closeUnlockModal();
+    updateUnlockBar();
+    showToast('✅ 解锁成功！现在可以查看2022-2025年全部数据', 'success');
+}
+
+        function resetUnlock() {
+            if (confirm('确定要重置解锁状态吗？')) {
+                localStorage.removeItem(STORAGE_KEY_UNLOCK);
+                localStorage.removeItem(STORAGE_KEY_UNLOCK_TIME);
+                updateUnlockBar();
+                showToast('已重置为免费版', 'success');
+            }
+        }
+
+        // ==================== Toast ====================
+        function showToast(msg, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast ' + type + ' show';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+function buildSchoolResultHTML(schoolGroups, query, unlocked) {
+    const schoolNames = Object.keys(schoolGroups).sort();
+    let html = `<p style="margin-bottom:8px;color:#5f6368;">🔍 搜索"<strong>${escapeHTML(query)}</strong>"，找到 <strong>${schoolNames.length}</strong> 所学校</p>`;
+
+    for (const schoolName of schoolNames) {
+        const items = schoolGroups[schoolName];
+        const displayYears = unlocked ? [2025, 2024, 2023, 2022] : [2025];
+
+        // 按“科类 + 选科要求”分组（忽略专业组代码差异）
+        const groupMap = new Map();
+        for (const item of items) {
+            const req = (item.subjectReq || '').trim() || '不限';
+            const key = (item.category || '') + '|||' + req;
+            if (!groupMap.has(key)) {
+                groupMap.set(key, {
+                    category: item.category,
+                    subjectReq: req === '不限' ? '不限' : req,
+                    years: {}
+                });
+            }
+            const group = groupMap.get(key);
+            const existing = group.years[item.year];
+            if (!existing || item.minScore < existing.minScore) {
+                group.years[item.year] = item;
+            }
+        }
+
+        const rows = [...groupMap.values()];
+        rows.sort((a, b) => {
+            if (a.category !== b.category) {
+                return a.category === '物理类' ? -1 : 1;
+            }
+            return a.subjectReq.localeCompare(b.subjectReq);
+        });
+
+        const firstItem = items[0];
+
+        html += `
+        <div class="card" style="margin-bottom:14px;">
+            <h3 style="margin:0 0 6px;">🏫 ${escapeHTML(schoolName)}</h3>
+            <p style="font-size:0.8rem;color:#5f6368;margin:0 0 10px;">
+                所在地：${escapeHTML(firstItem.schoolLocation || '—')} | 
+                性质：${escapeHTML(firstItem.schoolNature || '—')}
+                ${firstItem.is985 ? ' | <span class="tag-985">985</span>' : ''}
+                ${firstItem.is211 ? ' | <span class="tag-211">211</span>' : ''}
+            </p>
+            <div class="table-wrapper">
+            <table>
+                <thead><tr>
+                    <th>科类</th>
+                    <th>选科要求</th>`;
+
+        for (const y of displayYears) {
+            html += `<th>${y}年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+        }
+
+        if (!unlocked) {
+            html += `<th>2024年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+            html += `<th>2023年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+            html += `<th>2022年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+        }
+
+        // 趋势列（仅付费解锁后显示）
+        if (unlocked) {
+            html += `<th style="width:80px;text-align:center;">趋势<br><span style="font-weight:400;font-size:0.65rem;">逐年对比+定性</span></th>`;
+        }
+
+        html += `</tr></thead><tbody>`;
+
+        for (const row of rows) {
+            html += '<tr>';
+            html += `<td>${escapeHTML(row.category)}</td>`;
+            html += `<td style="font-size:0.82rem;">${escapeHTML(row.subjectReq)}</td>`;
+
+            for (const y of displayYears) {
+                const d = row.years[y];
+                if (d) {
+                    html += `<td><strong>${d.minScore}</strong><br><span style="font-size:0.75rem;color:#5f6368;">${d.minRank.toLocaleString()}</span></td>`;
+                } else {
+                    html += `<td>—</td>`;
+                }
+            }
+
+            if (!unlocked) {
+                html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看">🔒</td>`;
+                html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看">🔒</td>`;
+                html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看">🔒</td>`;
+            }
+
+            // 趋势分析（仅解锁后）
+            if (unlocked) {
+                const scores = {
+                    2022: row.years[2022] ? row.years[2022].minScore : null,
+                    2023: row.years[2023] ? row.years[2023].minScore : null,
+                    2024: row.years[2024] ? row.years[2024].minScore : null,
+                    2025: row.years[2025] ? row.years[2025].minScore : null
+                };
+
+                const yearPairs = [[2022,2023],[2023,2024],[2024,2025]];
+                const changes = yearPairs.map(([y1,y2]) => {
+                    if (scores[y1] !== null && scores[y2] !== null) {
+                        const diff = scores[y2] - scores[y1];
+                        const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '→');
+                        const color = diff > 0 ? '#c62828' : (diff < 0 ? '#2e7d32' : '#5f6368');
+                        return `<span style="color:${color};font-weight:600;">${arrow}${Math.abs(diff)}</span>`;
+                    }
+                    return '—';
+                });
+
+                // 整体定性
+                const validScores = Object.values(scores).filter(s => s !== null);
+                let conclusion = '';
+                if (validScores.length >= 3) {
+                    const diffs = [];
+                    for (let i = 1; i < validScores.length; i++) {
+                        diffs.push(validScores[i] - validScores[i-1]);
+                    }
+                    const allPositive = diffs.every(d => d > 0);
+                    const allNegative = diffs.every(d => d < 0);
+                    const hasUpDown = diffs.some(d => d > 0) && diffs.some(d => d < 0);
+                    const maxAbsDiff = Math.abs(validScores[validScores.length-1] - validScores[0]);
+                    
+                    if (allPositive && maxAbsDiff >= 5) conclusion = '持续上涨 📈';
+                    else if (allPositive && maxAbsDiff < 5) conclusion = '小幅上涨';
+                    else if (allNegative && maxAbsDiff >= 5) conclusion = '持续下跌 📉';
+                    else if (allNegative && maxAbsDiff < 5) conclusion = '小幅下跌';
+                    else if (hasUpDown) {
+                        const lastTwoDiff = validScores[validScores.length-1] - validScores[validScores.length-2];
+                        if (lastTwoDiff > 0) conclusion = '波动后回升';
+                        else conclusion = '波动后回落';
+                    } else {
+                        conclusion = '基本平稳';
+                    }
+                } else if (validScores.length === 2) {
+                    const diff = validScores[1] - validScores[0];
+                    conclusion = diff > 0 ? '上升' : (diff < 0 ? '下降' : '持平');
+                } else {
+                    conclusion = '数据不足';
+                }
+
+                html += `<td style="text-align:center;font-size:0.75rem;line-height:1.4;">
+                    <span style="font-size:0.7rem;color:#5f6368;">${changes.join(' ')}</span><br>
+                    <span style="font-weight:600;font-size:0.72rem;">${conclusion}</span>
+                </td>`;
+            }
+
+            html += '</tr>';
+        }
+
+        html += '</tbody></table></div></div>';
+    }
+
+    return html;
+}        // ==================== 表单验证与提交 ====================
+        function submitChongWenBao() {
+            const province = document.getElementById('province-select-cwb').value;
+            const category = document.getElementById('category-select-cwb').value;
+            const rankStr = document.getElementById('rank-input-cwb').value.trim();
+            const scoreStr = document.getElementById('score-input-cwb').value.trim();
+
+            if (!province) { showToast('请选择省份', 'error'); return; }
+            if (!category) { showToast('请选择科类', 'error'); return; }
+            if (!rankStr || isNaN(parseInt(rankStr)) || parseInt(rankStr) <= 0) {
+                showToast('请输入有效的位次（正整数）', 'error');
+                return;
+            }
+            const rank = parseInt(rankStr);
+            const score = scoreStr ? parseInt(scoreStr) : '';
+
+            // 构建URL参数并打开新窗口
+            const params = new URLSearchParams();
+            params.set('mode', 'result');
+            params.set('province', province);
+            params.set('category', category);
+            params.set('rank', rank);
+            if (score !== '') params.set('score', score);
+
+            const url = window.location.origin + window.location.pathname + '?' + params.toString();
+            window.open(url, '_blank');
+        }
+
+        function submitSchoolQuery() {
+            const province = document.getElementById('province-select-school').value;
+            const schoolName = document.getElementById('school-name-input').value.trim();
+
+            if (!province) { showToast('请选择省份', 'error'); return; }
+            if (!schoolName) { showToast('请输入学校名称', 'error'); return; }
+
+            const params = new URLSearchParams();
+            params.set('mode', 'school-result');
+            params.set('province', province);
+            params.set('school', schoolName);
+
+            const url = window.location.origin + window.location.pathname + '?' + params.toString();
+            window.open(url, '_blank');
+        }
+
+        // ==================== 结果页渲染（冲稳保） ====================
+        async function renderResultPage(params) {
+    const province = params.get('province');
+    const category = params.get('category');
+    const userRank = parseInt(params.get('rank'));
+    const userScore = params.get('score') ? parseInt(params.get('score')) : null;
+
+    // 创建结果页DOM
+    document.body.innerHTML = '';
+    document.body.style.background = '#f5f6fa';
+    document.body.style.padding = '0';
+    document.body.style.margin = '0';
+
+    // 顶部栏
+    const header = document.createElement('div');
+    header.className = 'result-header';
+    header.innerHTML = `
+        <button class="back-btn" onclick="window.close()" title="关闭">✕</button>
+        <span class="info-tag">📌 ${getProvinceName(province)}</span>
+        <span class="info-tag">${category}</span>
+        <span class="info-tag tag-orange">位次：${userRank.toLocaleString()}</span>
+        ${userScore ? `<span class="info-tag tag-green">分数：${userScore}（参考）</span>` : ''}
+        <span style="flex:1;"></span>
+        <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 免费版'}</span>
+    `;
+    document.body.appendChild(header);
+
+    // 内容容器
+    const container = document.createElement('div');
+    container.className = 'result-container';
+    container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>正在加载数据并计算...</p></div>';
+    document.body.appendChild(container);
+
+    // 加载数据
+    try {
+        const allData = await loadProvinceData(province);
+        if (!allData || allData.length === 0) {
+            container.innerHTML = '<div class="no-result">⚠️ 该省份数据为空，请检查数据文件</div>';
+            return;
+        }
+
+        // 筛选2025年数据
+        const data2025 = allData.filter(d => d.year === 2025 && d.category === category);
+        if (data2025.length === 0) {
+            container.innerHTML = '<div class="no-result">⚠️ 该省份2025年暂无' + category + '数据</div>';
+            return;
+        }
+
+        // 计算同位分
+        const isotonicResult = findIsotonicScore(data2025, userRank);
+        const isotonicScore = isotonicResult.score;
+
+        // 获取省份中文名（用于本省/外省判断）
+        const provinceName = getProvinceName(province);
+
+        // ========== 新分档函数（本省/外省各6所，不足补齐） ==========
+        function distributeTiers(allData, isotonicScore, userProvince) {
+    // 稳妥池：-5 ～ 同位分
+    const wenPool = allData.filter(d => 
+        d.minScore >= isotonicScore - 5 && d.minScore <= isotonicScore
+    );
+    // 冲刺池：+1 ～ +10
+    const chongPool = allData.filter(d => 
+        d.minScore >= isotonicScore + 1 && d.minScore <= isotonicScore + 10
+    );
+    // 保底池：-20 ～ -6
+    const baoPool = allData.filter(d => 
+        d.minScore >= isotonicScore - 20 && d.minScore <= isotonicScore - 6
+    );
+
+    // 通用升序分配（用于稳妥档和冲刺档）
+    function allocateAscending(pool, maxTotal, globalUsedSet) {
+        const sorted = [...pool].sort((a, b) => {
+            if (a.minScore !== b.minScore) return a.minScore - b.minScore;
+            return a.minRank - b.minRank;
+        });
+        return allocateFromSorted(sorted, maxTotal, globalUsedSet, false);
+    }
+
+    // 保底专用降序分配（从高分向低分取）
+    function allocateDescending(pool, maxTotal) {
+        const sorted = [...pool].sort((a, b) => {
+            if (b.minScore !== a.minScore) return b.minScore - a.minScore; // 降序
+            return a.minRank - b.minRank;
+        });
+        return allocateFromSorted(sorted, maxTotal, null, true);
+    }
+
+    // 核心分配逻辑
+    function allocateFromSorted(sorted, maxTotal, globalUsedSet, isDescending) {
+        const groups = new Map();
+        for (const item of sorted) {
+            if (globalUsedSet && globalUsedSet.has(item.schoolName)) continue;
+            if (!groups.has(item.minScore)) groups.set(item.minScore, []);
+            groups.get(item.minScore).push(item);
+        }
+
+        const provPicked = [], otherPicked = [];
+        const scores = [...groups.keys()].sort((a, b) => isDescending ? b - a : a - b);
+        const takenPerScore = new Map();
+
+        // 第一轮：各自尽量填满6所
+        for (const score of scores) {
+            if (provPicked.length >= 6 && otherPicked.length >= 6) break;
+            const items = groups.get(score);
+            let taken = takenPerScore.get(score) || 0;
+            for (const item of items) {
+                if (taken >= 2) break;
+                if (provPicked.length >= 6 && otherPicked.length >= 6) break;
+                const isProv = (item.schoolLocation === userProvince);
+                if (isProv && provPicked.length < 6) {
+                    provPicked.push(item); taken++;
+                } else if (!isProv && otherPicked.length < 6) {
+                    otherPicked.push(item); taken++;
+                }
+            }
+            takenPerScore.set(score, taken);
+        }
+
+        // 第二轮：补齐到12所
+        if (provPicked.length + otherPicked.length < maxTotal) {
+            for (const score of scores) {
+                if (provPicked.length + otherPicked.length >= maxTotal) break;
+                const items = groups.get(score);
+                let taken = takenPerScore.get(score) || 0;
+                for (const item of items) {
+                    if (provPicked.length + otherPicked.length >= maxTotal) break;
+                    if (taken >= 2) break;
+                    if (provPicked.includes(item) || otherPicked.includes(item)) continue;
+                    const isProv = (item.schoolLocation === userProvince);
+                    if (provPicked.length < 6 && isProv) provPicked.push(item);
+                    else if (otherPicked.length < 6 && !isProv) otherPicked.push(item);
+                    else if (provPicked.length < 6) provPicked.push(item);
+                    else otherPicked.push(item);
+                    taken++;
+                }
+                takenPerScore.set(score, taken);
+            }
+        }
+
+        const combined = [...provPicked, ...otherPicked];
+        // 展示排序：降序（高到低）
+        combined.sort((a, b) => {
+            if (b.minScore !== a.minScore) return b.minScore - a.minScore;
+            return a.minRank - b.minRank;
+        });
+        const usedNames = new Set(combined.map(item => item.schoolName));
+        return { picked: combined.slice(0, maxTotal), used: usedNames };
+    }
+
+    // 稳妥档：升序取
+    const wenResult = allocateAscending(wenPool, 12, null);
+    const wenFinal = wenResult.picked.map(item => ({ ...item, tier: '稳妥' }));
+
+    // 冲刺档：升序取（因为候选池本身就是+1到+10，升序取即可从低分开始）
+    const chongResult = allocateAscending(chongPool, 12, null);
+    const chongFinal = chongResult.picked.map(item => ({ ...item, tier: '冲刺' }));
+
+    // 保底档：降序取（从-6向-20）
+    const baoResult = allocateDescending(baoPool, 12);
+    const baoFinal = baoResult.picked.map(item => ({ ...item, tier: '保底' }));
+
+    return { chongFinal, wenFinal, baoFinal };
+}
+
+        const { chongFinal, wenFinal, baoFinal } = distributeTiers(data2025, isotonicScore, provinceName);
+
+        // 构建完整展示数据（附带历史年份）
+        const enrichedChong = await enrichWithHistory(allData, chongFinal, category);
+        const enrichedWen = await enrichWithHistory(allData, wenFinal, category);
+        const enrichedBao = await enrichWithHistory(allData, baoFinal, category);
+
+        // 渲染表格
+        container.innerHTML = buildResultHTML(
+            isotonicScore, isotonicResult, userRank, userScore,
+            enrichedChong, enrichedWen, enrichedBao,
+            province, category
+        );
+
+        // 绑定折叠事件
+        bindAccordionEvents();
+
+    } catch (err) {
+        console.error('渲染结果页失败:', err);
+        container.innerHTML = '<div class="no-result">❌ 加载失败：' + err.message + '</div>';
+    }
+}
+        // ==================== 结果页渲染（学校查询） ====================
+        async function renderSchoolResultPage(params) {
+            const province = params.get('province');
+            const schoolNameQuery = params.get('school');
+
+            document.body.innerHTML = '';
+            document.body.style.background = '#f5f6fa';
+            document.body.style.padding = '0';
+            document.body.style.margin = '0';
+
+            const header = document.createElement('div');
+            header.className = 'result-header';
+            header.innerHTML = `
+                <button class="back-btn" onclick="window.close()" title="关闭">✕</button>
+                <span class="info-tag">📌 ${getProvinceName(province)}</span>
+                <span class="info-tag tag-orange">🏫 ${escapeHTML(schoolNameQuery)}</span>
+                <span style="flex:1;"></span>
+                <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 免费版'}</span>
+            `;
+            document.body.appendChild(header);
+
+            const container = document.createElement('div');
+            container.className = 'result-container';
+            container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>正在加载数据...</p></div>';
+            document.body.appendChild(container);
+
+            try {
+                const allData = await loadProvinceData(province);
+                if (!allData || allData.length === 0) {
+                    container.innerHTML = '<div class="no-result">⚠️ 该省份数据为空</div>';
+                    return;
+                }
+
+                // 模糊匹配
+                const matched = allData.filter(d =>
+                    d.schoolName && d.schoolName.includes(schoolNameQuery)
+                );
+
+                if (matched.length === 0) {
+                    container.innerHTML = '<div class="no-result">🔍 未找到包含"' + escapeHTML(schoolNameQuery) +
+                        '"的学校，请尝试更精确的名称</div>';
+                    return;
+                }
+
+                // 按学校分组
+                const schoolGroups = {};
+                for (const item of matched) {
+                    if (!schoolGroups[item.schoolName]) {
+                        schoolGroups[item.schoolName] = [];
+                    }
+                    schoolGroups[item.schoolName].push(item);
+                }
+
+                const unlocked = isUnlocked();
+                container.innerHTML = buildSchoolResultHTML(schoolGroups, schoolNameQuery, unlocked);
+
+            } catch (err) {
+                console.error('渲染学校结果页失败:', err);
+                container.innerHTML = '<div class="no-result">❌ 加载失败：' + err.message + '</div>';
+            }
+        }
+
+        // ==================== 数据加载 ====================
+        async function loadProvinceData(provinceCode) {
+            const unlocked = isUnlocked();
+            const fileName = unlocked ? `${provinceCode}_full.json` : `${provinceCode}_free.json`;
+            const url = DATA_BASE_PATH + fileName;
+
+            const resp = await fetch(url);
+            if (!resp.ok) {
+                // 如果_full不存在，尝试_free
+                if (unlocked) {
+                    const fallbackResp = await fetch(DATA_BASE_PATH + `${provinceCode}_free.json`);
+                    if (!fallbackResp.ok) throw new Error(`无法加载省份数据: ${provinceCode}`);
+                    return await fallbackResp.json();
+                }
+                throw new Error(`无法加载省份数据: ${provinceCode}`);
+            }
+            return await resp.json();
+        }
+
+        function getProvinceName(code) {
+            const found = provincesData.find(p => p.code === code);
+            return found ? found.name : code;
+        }
+
+        // ==================== 同位分计算 ====================
+        function findIsotonicScore(data2025, userRank) {
+            // 在2025年数据中找到位次最接近的记录
+            let closest = null;
+            let minDiff = Infinity;
+
+            for (const item of data2025) {
+                const diff = Math.abs(item.minRank - userRank);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = item;
+                } else if (diff === minDiff && closest && item.minRank < closest.minRank) {
+                    // 距离相同时取位次更靠前的
+                    closest = item;
+                }
+            }
+
+            if (!closest) {
+                // 如果数据为空，返回默认值
+                const sorted = [...data2025].sort((a, b) => a.minRank - b.minRank);
+                if (userRank <= sorted[0].minRank) return { score: sorted[0].minScore, rank: sorted[0].minRank,
+                    school: sorted[0].schoolName, diff: sorted[0].minRank - userRank };
+                const last = sorted[sorted.length - 1];
+                return { score: last.minScore, rank: last.minRank, school: last.schoolName, diff: userRank - last
+                        .minRank };
+            }
+
+            return {
+                score: closest.minScore,
+                rank: closest.minRank,
+                school: closest.schoolName,
+                diff: closest.minRank - userRank
+            };
+        }
+
+        // ==================== 分数区间筛选 ====================
+        function filterByScoreRange(data2025, minScore, maxScore) {
+            return data2025.filter(d => d.minScore >= minScore && d.minScore <= maxScore);
+        }
+
+        // ==================== 丰富历史数据 ====================
+        async function enrichWithHistory(allData, schoolList, category) {
+    const unlocked = isUnlocked();
+    const result = [];
+
+    for (const item of schoolList) {
+        const enriched = { ...item, history: {} };
+
+        // 2025年直接用分档时传入的 item，绝不重新匹配
+        enriched.history[2025] = { ...item };
+
+        const historyYears = unlocked ? [2024, 2023, 2022] : [2024];
+        for (const year of historyYears) {
+            const yearData = allData.filter(d =>
+                d.schoolName === item.schoolName &&
+                d.year === year &&
+                d.category === category
+            );
+            if (yearData.length > 0) {
+                let match = yearData.find(d => d.majorGroup === item.majorGroup);
+                if (!match) {
+                    match = yearData.reduce((best, curr) => {
+                        if (!best) return curr;
+                        const diffCurr = Math.abs(curr.minScore - item.minScore);
+                        const diffBest = Math.abs(best.minScore - item.minScore);
+                        return diffCurr < diffBest ? curr : best;
+                    }, null);
+                }
+                enriched.history[year] = match;
+            } else {
+                enriched.history[year] = null;
+            }
+        }
+        result.push(enriched);
+    }
+    return result;
+}
+
+        // ==================== 构建结果HTML ====================
+        function buildResultHTML(isotonicScore, isotonicResult, userRank, userScore, chong, wen, bao, province, category) {
+            const unlocked = isUnlocked();
+            const yearCols = unlocked ?
+                ['2025', '2024', '2023', '2022'] :
+                ['2025', '2024'];
+
+            let html = '';
+
+            // 同位分信息卡片
+            html += `
+            <div class="card" style="margin-bottom:16px;">
+                <h3 style="margin:0 0 8px;">📐 同位分计算结果</h3>
+                <p style="margin:2px 0;font-size:0.9rem;">您的位次 <strong>${userRank.toLocaleString()}</strong> 在2025年最接近的录取记录：</p>
+                <p style="margin:2px 0;font-size:0.9rem;">🏫 <strong>${escapeHTML(isotonicResult.school)}</strong> | 位次：<strong>${isotonicResult.rank.toLocaleString()}</strong> | 分数：<strong style="color:#e53935;font-size:1.1rem;">${isotonicResult.score}</strong> 分</p>
+                <p style="margin:2px 0;font-size:0.8rem;color:#5f6368;">位次差异：${isotonicResult.diff >= 0 ? '+' : ''}${isotonicResult.diff.toLocaleString()} | 同位分基准：<strong>${isotonicScore}</strong> 分</p>
+                <p style="margin:2px 0;font-size:0.78rem;color:#9aa0a6;">冲刺档：[${isotonicScore+6}, ${isotonicScore+10}] | 稳妥档：[${isotonicScore-5}, ${isotonicScore+5}] | 保底档：[${isotonicScore-20}, ${isotonicScore-6}]</p>
+                ${userScore ? `<p style="margin:2px 0;font-size:0.85rem;">📝 您的预估分数：<strong>${userScore}</strong> 分（仅供参考）</p>` : ''}
+            </div>`;
+
+            // 冲刺档
+            html += buildTierSection('冲刺', 'badge-chong', chong, yearCols, unlocked, '🔴 冲刺档');
+            // 稳妥档
+            html += buildTierSection('稳妥', 'badge-wen', wen, yearCols, unlocked, '🟠 稳妥档');
+            // 保底档
+            html += buildTierSection('保底', 'badge-bao', bao, yearCols, unlocked, '🟢 保底档');
+
+            if (chong.length === 0 && wen.length === 0 && bao.length === 0) {
+                html += '<div class="no-result">😔 未找到匹配的学校，请尝试调整位次或更换省份/科类</div>';
+            }
+
+            return html;
+        }
+
+     function buildTierSection(tierName, badgeClass, schools, yearCols, unlocked, emojiTitle) {
+    if (schools.length === 0) {
+        return `
+        <div class="section-title">
+            <span class="badge ${badgeClass}">${tierName}</span> ${emojiTitle}
+            <span style="font-weight:400;font-size:0.8rem;color:#9aa0a6;">（共0所）</span>
+        </div>
+        <div class="no-result" style="padding:12px;">暂无符合条件的学校</div>`;
+    }
+
+    const collapseId = `collapse-${tierName}`;
+    let html = `
+    <div class="section-title accordion-toggle" data-target="${collapseId}">
+        <span>
+            <span class="badge ${badgeClass}">${tierName}</span> ${emojiTitle}
+            <span style="font-weight:400;font-size:0.8rem;color:#9aa0a6;">（共${schools.length}所）</span>
+        </span>
+        <span class="arrow">▼</span>
+    </div>
+    <div class="accordion-content" id="${collapseId}">
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>学校名称</th>
+                <th>所在地</th>
+                <th>性质</th>
+                <th>标签</th>
+                <th>专业组</th>
+                <th>选科要求</th>`;
+
+    // 年份列
+    for (const y of yearCols) {
+        html += `<th>${y}年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+    }
+    if (!unlocked) {
+        html += `<th>2023年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+        html += `<th>2022年<br><span style="font-weight:400;font-size:0.7rem;">分数 / 位次</span></th>`;
+    }
+
+    // 趋势列表头（始终显示，免费版也显示）
+    html += `<th style="width:80px;text-align:center;">趋势<br><span style="font-weight:400;font-size:0.65rem;">22-25分析</span></th>`;
+
+    html += `</tr></thead><tbody>`;
+
+    // 数据行
+    for (const school of schools) {
+        html += '<tr>';
+        html += `<td class="school-name-cell" title="${escapeHTML(school.schoolName)}">${escapeHTML(school.schoolName)}</td>`;
+        html += `<td>${escapeHTML(school.schoolLocation || '—')}</td>`;
+        html += `<td>${escapeHTML(school.schoolNature || '—')}</td>`;
+        html += `<td>${school.is985 ? '<span class="tag-985">985</span>' : ''} ${school.is211 ? '<span class="tag-211">211</span>' : ''}</td>`;
+        html += `<td>${escapeHTML(school.majorGroup || '—')}</td>`;
+        html += `<td style="font-size:0.72rem;">${escapeHTML(school.subjectReq || '—')}</td>`;
+
+        for (const y of yearCols) {
+            const h = school.history && school.history[parseInt(y)];
+            if (h) {
+                html += `<td><strong>${h.minScore}</strong><br><span style="font-size:0.75rem;color:#5f6368;">${h.minRank.toLocaleString()}</span></td>`;
+            } else {
+                html += `<td>—</td>`;
+            }
+        }
+
+        if (!unlocked) {
+            html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看">🔒</td>`;
+            html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看">🔒</td>`;
+        }
+
+        // 趋势单元格
+        if (unlocked) {
+            // 解锁后显示真实趋势
+            const scores = {
+                2022: school.history[2022] ? school.history[2022].minScore : null,
+                2023: school.history[2023] ? school.history[2023].minScore : null,
+                2024: school.history[2024] ? school.history[2024].minScore : null,
+                2025: school.history[2025] ? school.history[2025].minScore : null
+            };
+
+            const yearPairs = [[2022,2023],[2023,2024],[2024,2025]];
+            const changes = yearPairs.map(([y1,y2]) => {
+                if (scores[y1] !== null && scores[y2] !== null) {
+                    const diff = scores[y2] - scores[y1];
+                    const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '→');
+                    const color = diff > 0 ? '#c62828' : (diff < 0 ? '#2e7d32' : '#5f6368');
+                    return `<span style="color:${color};font-weight:600;">${arrow}${Math.abs(diff)}</span>`;
+                }
+                return '—';
+            });
+
+            // 整体定性
+            const validScores = Object.values(scores).filter(s => s !== null);
+            let conclusion = '';
+            if (validScores.length >= 3) {
+                const diffs = [];
+                for (let i = 1; i < validScores.length; i++) {
+                    diffs.push(validScores[i] - validScores[i-1]);
+                }
+                const allPositive = diffs.every(d => d > 0);
+                const allNegative = diffs.every(d => d < 0);
+                const hasUpDown = diffs.some(d => d > 0) && diffs.some(d => d < 0);
+                const maxAbsDiff = Math.abs(validScores[validScores.length-1] - validScores[0]);
+                
+                if (allPositive && maxAbsDiff >= 5) conclusion = '持续上涨 📈';
+                else if (allPositive && maxAbsDiff < 5) conclusion = '小幅上涨';
+                else if (allNegative && maxAbsDiff >= 5) conclusion = '持续下跌 📉';
+                else if (allNegative && maxAbsDiff < 5) conclusion = '小幅下跌';
+                else if (hasUpDown) {
+                    const lastTwoDiff = validScores[validScores.length-1] - validScores[validScores.length-2];
+                    if (lastTwoDiff > 0) conclusion = '波动后回升';
+                    else conclusion = '波动后回落';
+                } else {
+                    conclusion = '基本平稳';
+                }
+            } else if (validScores.length === 2) {
+                const diff = validScores[1] - validScores[0];
+                conclusion = diff > 0 ? '上升' : (diff < 0 ? '下降' : '持平');
+            } else {
+                conclusion = '数据不足';
+            }
+
+            html += `<td style="text-align:center;font-size:0.75rem;line-height:1.4;">
+                <span style="font-size:0.7rem;color:#5f6368;">${changes.join(' ')}</span><br>
+                <span style="font-weight:600;font-size:0.72rem;">${conclusion}</span>
+            </td>`;
+        } else {
+            // 免费版：趋势列显示锁
+            html += `<td class="locked-cell" onclick="showUnlockModalFromResult()" title="付费解锁查看趋势分析">🔒</td>`;
+        }
+
+        html += '</tr>';
+    }
+
+    html += '</tbody></table></div></div>';
+    return html;
+}
+        // ==================== 辅助函数 ====================
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function bindAccordionEvents() {
+            document.querySelectorAll('.accordion-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const content = document.getElementById(targetId);
+                    if (content) {
+                        const isCollapsed = content.classList.contains('collapsed');
+                        if (isCollapsed) {
+                            content.classList.remove('collapsed');
+                            this.classList.remove('collapsed');
+                            this.querySelector('.arrow').textContent = '▼';
+                        } else {
+                            content.classList.add('collapsed');
+                            this.classList.add('collapsed');
+                            this.querySelector('.arrow').textContent = '▶';
+                        }
+                    }
+                });
+            });
+        }
+
+        function showUnlockModalFromResult() {
+            // 在结果页中触发解锁（通过opener或直接在当前窗口显示）
+            if (window.opener && !window.opener.closed) {
+                window.opener.showUnlockModal();
+                window.opener.focus();
+            } else {
+                // 如果在独立标签页中，使用简易提示
+                const code = prompt('请输入解锁码（演示码：VIP2026）：');
+                if (code && code.trim() === UNLOCK_CODE) {
+                    localStorage.setItem(STORAGE_KEY_UNLOCK, 'true');
+                    localStorage.setItem(STORAGE_KEY_UNLOCK_TIME, new Date().toLocaleString('zh-CN'));
+                    alert('✅ 解锁成功！请刷新页面查看完整数据。');
+                    location.reload();
+                } else if (code) {
+                    alert('❌ 解锁码无效');
+                }
+            }
+        }
+
+        // ==================== 关闭弹窗（点击遮罩） ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('unlockModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeUnlockModal();
+                    }
+                });
+            }
+            // 回车键提交解锁码
+            const unlockInput = document.getElementById('unlockCodeInput');
+            if (unlockInput) {
+                unlockInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        verifyUnlockCode();
+                    }
+                });
+            }
+            // 初始化
+            init();
+        });
+
+        // 也支持在结果页中回车解锁
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeUnlockModal();
+            }
+        });
+    </script>
+</body>
+</html>
