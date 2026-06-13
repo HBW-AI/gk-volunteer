@@ -642,11 +642,13 @@
 
         <!-- 解锁状态栏 -->
         <div class="unlock-bar" id="unlockBar">
-            <span class="unlock-status">
-                <span class="icon">🔒</span> 免费版（2024-2025年数据可见）
-            </span>
-            <button class="btn btn-sm btn-gold" onclick="showUnlockModal()">💰 解锁全部数据</button>
-        </div>
+    <span class="unlock-status">
+        <span class="icon">🔒</span> 免费版（2024-2025年数据可见）
+    </span>
+    <button class="btn btn-sm btn-gold" onclick="showUnlockModal()" style="padding:8px 16px; font-weight:700; white-space:nowrap;">
+        ⚡ 立即激活
+    </button>
+</div>
 
         <!-- 选项卡 -->
         <div class="tabs">
@@ -716,36 +718,40 @@
     <div class="modal">
         <button class="close-btn" onclick="closeUnlockModal()">✕</button>
         <h3>🔓 解锁全部年份数据</h3>
-        <p style="font-size:0.9rem;color:#5f6368;margin-bottom:4px;">解锁后即可查看 <strong>2022-2025年</strong> 完整录取数据</p>
+        <p style="font-size:0.9rem;color:#5f6368;margin-bottom:4px;">
+            解锁后即可查看 <strong>2022-2025年</strong> 完整录取数据
+        </p>
         <p style="font-size:0.8rem;color:#9aa0a6;margin-top:0;">
             📊 四年分数 · 📈 位次变化 · 📉 趋势分析 · 🏷️ 最新填报指南
         </p>
-        <div class="price">¥99</div>
+        <div style="text-align:center; margin:10px 0;">
+            <span style="text-decoration:line-through; font-size:1.2rem; color:#999;">¥199</span>
+            <span style="font-size:2rem; font-weight:bold; color:#e53935; margin-left:10px;">¥99</span>
+        </div>
         <p style="font-size:0.85rem;color:#e65100;font-weight:600;margin:4px 0;">
             ⚡ 一次购买，永久有效，不限查询次数
         </p>
         <p style="font-size:0.75rem;color:#9aa0a6;">
-            联系客服领取专属解锁码<br>每个码仅限一台设备使用
+            联系客服领取专属资料<br>每个码仅限一台设备使用
         </p>
-        <input type="text" id="unlockCodeInput" placeholder="请输入8位解锁码" maxlength="20" style="text-align:center;font-size:1.1rem;letter-spacing:2px;">
-        <button class="btn btn-gold" onclick="verifyUnlockCode()" style="margin-top:8px;">
+        <input type="text" id="unlockCodeInput" placeholder="请输入8位解锁码" maxlength="20" style="text-align:center;font-size:1.1rem;letter-spacing:2px; width:100%; padding:10px;">
+        <button class="btn btn-gold" onclick="verifyUnlockCode()" style="margin-top:8px; width:100%;">
             ✅ 验证解锁
         </button>
-        <div style="margin-top:12px; display:flex; align-items:center; justify-content:center; gap:6px;">
-    <svg width="22" height="18" viewBox="0 0 24 20" fill="#07C160" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.5 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-9.05 3.9c-.7 0-1.3.2-1.7.5-1 .6-1.5 1.5-1.5 2.6v.5h8v-.5c0-1.1-.5-2-1.5-2.6-.4-.3-1-.5-1.7-.5h-1.6zm7.1-.1c-.5 0-1 .1-1.4.3-.6.3-1 .7-1.2 1.3h3.2c-.2-.6-.6-1-1.2-1.3-.4-.2-.9-.3-1.4-.3zM12 0C5.4 0 0 4.2 0 9.5 0 12.5 1.6 15 4.1 16.8l-1 3.2 3.5-1.8c1 .3 2.1.5 3.3.5.7 0 1.3-.1 1.9-.2-1.4-1.1-2.3-2.7-2.3-4.5 0-3.3 2.9-6 6.5-6 .4 0 .8 0 1.2.1C16.2 2.7 14.3 0 12 0z"/>
-        <circle cx="15" cy="14" r="2" fill="#07C160"/>
-        <circle cx="19" cy="12" r="2" fill="#07C160"/>
-        <circle cx="15" cy="10" r="1.5" fill="#07C160"/>
-        <circle cx="19" cy="8" r="1.5" fill="#07C160"/>
-        <circle cx="17" cy="6" r="1.5" fill="#07C160"/>
-        <circle cx="21" cy="6" r="1.5" fill="#07C160"/>
-        <circle cx="23" cy="8" r="1.5" fill="#07C160"/>
-    </svg>
-    <span style="font-size:0.82rem; color:#07C160; font-weight:600;">加客服领取资料</span>
-</div>
-<p class="hint" style="margin:4px 0 0 0; font-size:0.75rem;">微信号：<strong style="color:#07C160;">hbw9109</strong></p>
-</p>
+        <div style="margin-top:12px; display:flex; align-items:center; justify-content:center; gap:6px; background:#f0fff4; padding:8px 16px; border-radius:20px; border:1px solid #b7ebc6;">
+            <svg width="22" height="18" viewBox="0 0 24 20" fill="#07C160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.5 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-9.05 3.9c-.7 0-1.3.2-1.7.5-1 .6-1.5 1.5-1.5 2.6v.5h8v-.5c0-1.1-.5-2-1.5-2.6-.4-.3-1-.5-1.7-.5h-1.6zm7.1-.1c-.5 0-1 .1-1.4.3-.6.3-1 .7-1.2 1.3h3.2c-.2-.6-.6-1-1.2-1.3-.4-.2-.9-.3-1.4-.3zM12 0C5.4 0 0 4.2 0 9.5 0 12.5 1.6 15 4.1 16.8l-1 3.2 3.5-1.8c1 .3 2.1.5 3.3.5.7 0 1.3-.1 1.9-.2-1.4-1.1-2.3-2.7-2.3-4.5 0-3.3 2.9-6 6.5-6 .4 0 .8 0 1.2.1C16.2 2.7 14.3 0 12 0z"/>
+                <circle cx="15" cy="14" r="2" fill="#07C160"/>
+                <circle cx="19" cy="12" r="2" fill="#07C160"/>
+                <circle cx="15" cy="10" r="1.5" fill="#07C160"/>
+                <circle cx="19" cy="8" r="1.5" fill="#07C160"/>
+                <circle cx="17" cy="6" r="1.5" fill="#07C160"/>
+                <circle cx="21" cy="6" r="1.5" fill="#07C160"/>
+                <circle cx="23" cy="8" r="1.5" fill="#07C160"/>
+            </svg>
+            <span style="font-size:0.82rem; color:#07C160; font-weight:600;">加微信领取资料和解锁码</span>
+        </div>
+        <p class="hint" style="margin:4px 0 0 0; font-size:0.75rem;">微信号：<strong style="color:#07C160;">hbw9109</strong></p>
     </div>
 </div>
 
@@ -1146,14 +1152,15 @@ function buildSchoolResultHTML(schoolGroups, query, unlocked) {
     const header = document.createElement('div');
     header.className = 'result-header';
     header.innerHTML = `
-        <button class="back-btn" onclick="window.close()" title="关闭">✕</button>
-        <span class="info-tag">📌 ${getProvinceName(province)}</span>
-        <span class="info-tag">${category}</span>
-        <span class="info-tag tag-orange">位次：${userRank.toLocaleString()}</span>
-        ${userScore ? `<span class="info-tag tag-green">分数：${userScore}（参考）</span>` : ''}
-        <span style="flex:1;"></span>
-        <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 免费版'}</span>
-    `;
+    <button class="back-btn" onclick="window.close()" title="关闭">✕</button>
+    <span class="info-tag">📌 ${getProvinceName(province)}</span>
+    <span class="info-tag">${category}</span>
+    <span class="info-tag tag-orange">位次：${userRank.toLocaleString()}</span>
+    ${userScore ? `<span class="info-tag tag-green">分数：${userScore}（参考）</span>` : ''}
+    <span style="flex:1;"></span>
+    <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 VIP版'}</span>
+    ${isUnlocked() ? '' : `<button class="btn btn-sm btn-gold" onclick="showUnlockModalResult()" style="margin-left:8px; padding:4px 12px; font-weight:700; white-space:nowrap;">⚡ 立即激活</button>`}
+`;
     document.body.appendChild(header);
 
     // 内容容器
@@ -1311,10 +1318,92 @@ function buildSchoolResultHTML(schoolGroups, query, unlocked) {
         // 绑定折叠事件
         bindAccordionEvents();
 
-    } catch (err) {
+        } catch (err) {
         console.error('渲染结果页失败:', err);
         container.innerHTML = '<div class="no-result">❌ 加载失败：' + err.message + '</div>';
     }
+
+    // ===== 结果页独立解锁弹窗（在 renderResultPage 内部） =====
+    const modalHTML = `
+    <div class="modal-overlay" id="unlockModalResult" style="display:none;">
+        <div class="modal">
+            <button class="close-btn" onclick="closeUnlockModalResult()">✕</button>
+            <h3>🔓 解锁全部年份数据</h3>
+            <p style="font-size:0.9rem;color:#5f6368;margin-bottom:4px;">解锁后即可查看 <strong>2022-2025年</strong> 完整录取数据</p>
+            <p style="font-size:0.8rem;color:#9aa0a6;margin-top:0;">📊 四年分数 · 📈 位次变化 · 📉 趋势分析 · 🏷️ 最新填报指南 · 2026招生政策· </p>
+            <div style="text-align:center; margin:10px 0;">
+                <span style="text-decoration:line-through; font-size:1.2rem; color:#999;">¥199</span>
+                <span style="font-size:2rem; font-weight:bold; color:#e53935; margin-left:10px;">¥99</span>
+            </div>
+            <p style="font-size:0.85rem;color:#e65100;font-weight:600;margin:4px 0;">⚡ 一次购买，永久有效，不限查询次数</p>
+            <p style="font-size:0.75rem;color:#9aa0a6;">联系客服领取专属资料和解锁码<br>每个码仅限一台设备使用</p>
+            <input type="text" id="unlockCodeInputResult" placeholder="请输入8位解锁码" maxlength="20" style="text-align:center;font-size:1.1rem;letter-spacing:2px; width:100%; padding:10px;">
+            <button class="btn btn-gold" onclick="verifyUnlockCodeResult()" style="margin-top:8px; width:100%;">✅ 验证解锁</button>
+            <div style="margin-top:12px; display:flex; align-items:center; justify-content:center; gap:6px; background:#f0fff4; padding:8px 16px; border-radius:20px; border:1px solid #b7ebc6;">
+                <svg width="22" height="18" viewBox="0 0 24 20" fill="#07C160" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.5 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm7 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-9.05 3.9c-.7 0-1.3.2-1.7.5-1 .6-1.5 1.5-1.5 2.6v.5h8v-.5c0-1.1-.5-2-1.5-2.6-.4-.3-1-.5-1.7-.5h-1.6zm7.1-.1c-.5 0-1 .1-1.4.3-.6.3-1 .7-1.2 1.3h3.2c-.2-.6-.6-1-1.2-1.3-.4-.2-.9-.3-1.4-.3zM12 0C5.4 0 0 4.2 0 9.5 0 12.5 1.6 15 4.1 16.8l-1 3.2 3.5-1.8c1 .3 2.1.5 3.3.5.7 0 1.3-.1 1.9-.2-1.4-1.1-2.3-2.7-2.3-4.5 0-3.3 2.9-6 6.5-6 .4 0 .8 0 1.2.1C16.2 2.7 14.3 0 12 0z"/>
+                    <circle cx="15" cy="14" r="2" fill="#07C160"/>
+                    <circle cx="19" cy="12" r="2" fill="#07C160"/>
+                    <circle cx="15" cy="10" r="1.5" fill="#07C160"/>
+                    <circle cx="19" cy="8" r="1.5" fill="#07C160"/>
+                    <circle cx="17" cy="6" r="1.5" fill="#07C160"/>
+                    <circle cx="21" cy="6" r="1.5" fill="#07C160"/>
+                    <circle cx="23" cy="8" r="1.5" fill="#07C160"/>
+                </svg>
+                <span style="font-size:0.82rem; color:#07C160; font-weight:600;">加微信领取资料和解锁码</span>
+            </div>
+            <p class="hint" style="margin:4px 0 0 0; font-size:0.75rem;">微信号：<strong style="color:#07C160;">hbw9109</strong></p>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    window.showUnlockModalResult = function() {
+        document.getElementById('unlockModalResult').style.display = 'flex';
+    };
+    window.closeUnlockModalResult = function() {
+        document.getElementById('unlockModalResult').style.display = 'none';
+    };
+
+    window.verifyUnlockCodeResult = async function() {
+        const code = document.getElementById('unlockCodeInputResult').value.trim().toUpperCase();
+        if (!code) {
+            alert('请输入解锁码');
+            return;
+        }
+        const encoder = new TextEncoder();
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(code));
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        if (!window._hashedCodes) {
+            try {
+                const resp = await fetch('data/hashed_codes.json');
+                window._hashedCodes = await resp.json();
+            } catch (e) {
+                alert('验证服务暂不可用');
+                return;
+            }
+        }
+        const hashedCodes = window._hashedCodes;
+        if (!hashedCodes.includes(hashHex)) {
+            alert('❌ 解锁码无效');
+            return;
+        }
+        let usedHashes = JSON.parse(localStorage.getItem('usedHashes') || '[]');
+        if (usedHashes.includes(hashHex)) {
+            alert('❌ 该解锁码已被使用');
+            return;
+        }
+
+        localStorage.setItem('gk_assistant_unlocked', 'true');
+        localStorage.setItem('gk_assistant_unlock_time', new Date().toLocaleString('zh-CN'));
+        usedHashes.push(hashHex);
+        localStorage.setItem('usedHashes', JSON.stringify(usedHashes));
+
+        window.closeUnlockModalResult();
+        alert('✅ 解锁成功！请刷新页面查看完整数据');
+        location.reload();
+    };
 }
         // ==================== 结果页渲染（学校查询） ====================
         async function renderSchoolResultPage(params) {
@@ -1333,8 +1422,8 @@ function buildSchoolResultHTML(schoolGroups, query, unlocked) {
                 <span class="info-tag">📌 ${getProvinceName(province)}</span>
                 <span class="info-tag tag-orange">🏫 ${escapeHTML(schoolNameQuery)}</span>
                 <span style="flex:1;"></span>
-                <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 免费版'}</span>
-            `;
+                <span style="font-size:0.78rem;color:#5f6368;">${isUnlocked() ? '✅ 已解锁' : '🔒 免费版'} 
+                  `;
             document.body.appendChild(header);
 
             const container = document.createElement('div');
@@ -1489,27 +1578,64 @@ function buildSchoolResultHTML(schoolGroups, query, unlocked) {
 
             let html = '';
 
-            // 同位分信息卡片
-            html += `
-            <div class="card" style="margin-bottom:16px;">
-                <h3 style="margin:0 0 8px;">📐 同位分计算结果</h3>
-                <p style="margin:2px 0;font-size:0.9rem;">您的位次 <strong>${userRank.toLocaleString()}</strong> 在2025年最接近的录取记录：</p>
-                <p style="margin:2px 0;font-size:0.9rem;">🏫 <strong>${escapeHTML(isotonicResult.school)}</strong> | 位次：<strong>${isotonicResult.rank.toLocaleString()}</strong> | 分数：<strong style="color:#e53935;font-size:1.1rem;">${isotonicResult.score}</strong> 分</p>
-                <p style="margin:2px 0;font-size:0.8rem;color:#5f6368;">位次差异：${isotonicResult.diff >= 0 ? '+' : ''}${isotonicResult.diff.toLocaleString()} | 同位分基准：<strong>${isotonicScore}</strong> 分</p>
-                <p style="margin:2px 0;font-size:0.78rem;color:#9aa0a6;">冲刺档：[${isotonicScore+6}, ${isotonicScore+10}] | 稳妥档：[${isotonicScore-5}, ${isotonicScore+5}] | 保底档：[${isotonicScore-20}, ${isotonicScore-6}]</p>
-                ${userScore ? `<p style="margin:2px 0;font-size:0.85rem;">📝 您的预估分数：<strong>${userScore}</strong> 分（仅供参考）</p>` : ''}
-            </div>`;
+            // 同位分信息卡片（左右分栏，右侧放置二维码）
+html += `
+<div class="card" style="margin-bottom:16px; display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+    <!-- 左侧：同位分计算结果 -->
+    <div style="flex:1; min-width:250px;">
+        <h3 style="margin:0 0 8px;">📐 同位分计算结果</h3>
+        <p style="margin:2px 0;font-size:0.9rem;">您的位次 <strong>${userRank.toLocaleString()}</strong> 在2025年最接近的录取记录：</p>
+        <p style="margin:2px 0;font-size:0.9rem;">🏫 <strong>${escapeHTML(isotonicResult.school)}</strong> | 位次：<strong>${isotonicResult.rank.toLocaleString()}</strong> | 分数：<strong style="color:#e53935;font-size:1.1rem;">${isotonicResult.score}</strong> 分</p>
+        <p style="margin:2px 0;font-size:0.8rem;color:#5f6368;">位次差异：${isotonicResult.diff >= 0 ? '+' : ''}${isotonicResult.diff.toLocaleString()} | 同位分基准：<strong>${isotonicScore}</strong> 分</p>
+        <p style="margin:2px 0;font-size:0.78rem;color:#9aa0a6;">
+            冲刺档：[${isotonicScore+1}, ${isotonicScore+10}] | 
+            稳妥档：[${isotonicScore-5}, ${isotonicScore}] | 
+            保底档：[${isotonicScore-20}, ${isotonicScore-6}]
+        </p>
+        ${userScore ? `<p style="margin:2px 0;font-size:0.85rem;">📝 您的预估分数：<strong>${userScore}</strong> 分（仅供参考）</p>` : ''}
+    </div>`;
 
-            // 冲刺档
-            html += buildTierSection('冲刺', 'badge-chong', chong, yearCols, unlocked, '🔴 冲刺档');
-            // 稳妥档
-            html += buildTierSection('稳妥', 'badge-wen', wen, yearCols, unlocked, '🟠 稳妥档');
-            // 保底档
-            html += buildTierSection('保底', 'badge-bao', bao, yearCols, unlocked, '🟢 保底档');
+// 右侧：二维码（仅免费版显示）
+if (!isUnlocked()) {
+    html += `
+    <div style="flex:0 0 auto; text-align:center;">
+        <img src="data/wechat-qr.png" alt="微信二维码" style="width:120px; height:120px; border-radius:8px; border:1px solid #ddd;">
+        <p style="font-size:0.65rem; color:#9aa0a6; margin-top:4px;">扫码解锁</p>
+    </div>`;
+}
 
-            if (chong.length === 0 && wen.length === 0 && bao.length === 0) {
+html += `</div>`; // 结束卡片
+
+// 下方的营销方案保持不变！继续使用你原来的代码，不要动
+
+// 免费版营销引导（紧贴同位分卡片下方）
+if (!isUnlocked()) {
+    html += `
+    <div style="margin:12px 0; padding:12px; background:#fff8e1; border-radius:8px; border:1px solid #ffcc02; font-size:0.85rem; color:#5d4037;">
+        <p style="margin:0 0 6px; font-weight:600;">📢 以下仅为2024-2025年数据。想知道这些学校22-23年的位次走势，判断今年是涨是跌？</p>
+        <p style="margin:0 0 6px;"><strong style="color:#e53935;">VIP</strong>解锁四年完整数据。 每个学校四年位次并排显示，涨跌一眼看穿。不限次数查询，出分前随便查。</p>
+        <p style="margin:0; font-size:0.78rem; color:#795548;">联系方式：扫码添加老师微信<strong style="color:#07C160;">hbw9109</strong>，备注‘解锁’，付完立刻开通。</p>
+    </div>`;
+}
+
+// 冲刺档
+html += buildTierSection('冲刺', 'badge-chong', chong, yearCols, unlocked, '🔴 冲刺档');
+// 稳妥档
+html += buildTierSection('稳妥', 'badge-wen', wen, yearCols, unlocked, '🟠 稳妥档');
+// 保底档
+html += buildTierSection('保底', 'badge-bao', bao, yearCols, unlocked, '🟢 保底档');
+
+                        if (chong.length === 0 && wen.length === 0 && bao.length === 0) {
                 html += '<div class="no-result">😔 未找到匹配的学校，请尝试调整位次或更换省份/科类</div>';
             }
+
+           // 已解锁用户专属推荐文案（加粗关键金额）
+if (isUnlocked()) {
+    html += `
+    <div style="margin-top:20px; padding:12px; background:#f0f8e8; border-radius:8px; border:1px solid #a5d6a7; font-size:0.85rem; color:#2e7d32; text-align:center;">
+        <p style="margin:0;">✅ 您已解锁四年完整数据。觉得有用？把本工具转发给身边的家长朋友。每推荐一人付费，<strong style="color:#2e7d32;">返您20元</strong>，微信直接转。</p>
+    </div>`;
+}
 
             return html;
         }
